@@ -1,0 +1,64 @@
+#!/bin/sh
+
+# Written: 2009, Michiel van Wessem, Manchester, United Kingdom.
+# Based heavily on the rpm2tgz script created by Patrick Volkerding
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+# * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# FOR PEOPLE RUNNING SLACKWARE-12.2 (xz is of course part of -current)
+# NOTE: This script requires you to have xz installed n your
+#      system. The best way is to download the source/a/xz/ 
+#      slackbuild and source from a slackware-current mirror 
+#      and build xz from scratch.
+#                        
+#      You also may want to edit /etc/DIR_COLORS, so that 
+#      txz files show up properly as archives.
+                              
+
+if [ "$1" = "" ]; then
+  echo "$(basename $0):  Converts a standard slackware package (.tgz) to the new "
+  echo "            standard of GNU tar + xz (LZMA) format."
+  echo "            (view converted packages with \"less\", install and remove"
+  echo "            with \"installpkg\", \"removepkg\", \"pkgtool\", or manually"
+  echo "            with \"tar\")"
+  echo
+  echo "Usage:      $(basename $0) <file.tgz> "
+  echo "            (Outputs \"file.txz\")"
+fi
+
+# Create a new temporary directory with a secure filename:
+for i in $*; do
+  if which xz 1> /dev/null 2> /dev/null; then
+    
+    # Unzip the slackware package so we have just the tarball
+    gunzip $i
+
+    #Repackage it again, just this time with xz.
+    xz -z $(basename $i .tgz).tar
+
+    # Move the file over to the proper new file extension
+    mv $(basename $i .tgz).tar.xz $(basename $i .tgz).txz
+  else
+    echo "ERROR: xz has not been found. (did you install it?)"
+    exit 127
+  fi
+done
+
