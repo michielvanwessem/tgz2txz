@@ -45,20 +45,26 @@ if [ "$1" = "" ]; then
 fi
 
 for i in $*; do
-  if which xz 1> /dev/null 2> /dev/null; then
-    if [ -e $i ]; then
-      # Unzip the slackware package so we have just the tarball
-      gunzip $i
+  if [ -e $i ]; then
 
-      #Repackage it again, just this time with xz.
-      xz -z $(basename $i .tgz).tar
+    if which xz 1> /dev/null 2> /dev/null; then
 
-      # Move the file over to the proper new file extension
-      mv $(basename $i .tgz).tar.xz $(basename $i .tgz).txz
+    # Unzip the slackware package so we have just the tarball
+    gunzip $i
+
+    # Repackage it again, just this time with xz.
+    xz -z $(basename $i .tgz).tar
+
+    # Move the file over to the proper new file extension
+    mv $(basename $i .tgz).tar.xz $(basename $i .tgz).txz
+
     else
       echo "ERROR: xz has not been found. (did you install it?)"
       exit 127
     fi
+
+  else
+    echo "WARNING: No .tgz files found. Skipping..."
   fi
 done
 
