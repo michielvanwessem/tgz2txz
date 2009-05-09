@@ -44,21 +44,21 @@ if [ "$1" = "" ]; then
   echo "            (Outputs \"file.txz\")"
 fi
 
-# Create a new temporary directory with a secure filename:
 for i in $*; do
   if which xz 1> /dev/null 2> /dev/null; then
-    
-    # Unzip the slackware package so we have just the tarball
-    gunzip $i
+    if [ -e $i ]; then
+      # Unzip the slackware package so we have just the tarball
+      gunzip $i
 
-    #Repackage it again, just this time with xz.
-    xz -z $(basename $i .tgz).tar
+      #Repackage it again, just this time with xz.
+      xz -z $(basename $i .tgz).tar
 
-    # Move the file over to the proper new file extension
-    mv $(basename $i .tgz).tar.xz $(basename $i .tgz).txz
-  else
-    echo "ERROR: xz has not been found. (did you install it?)"
-    exit 127
+      # Move the file over to the proper new file extension
+      mv $(basename $i .tgz).tar.xz $(basename $i .tgz).txz
+    else
+      echo "ERROR: xz has not been found. (did you install it?)"
+      exit 127
+    fi
   fi
 done
 
