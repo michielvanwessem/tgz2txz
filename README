@@ -1,0 +1,15 @@
+tgz2txz is used to convert packages from slackware tgz format, 
+        over to the new txz format used by slackware-current.
+        (as per ChangeLog Entry : Fri May  8 18:49:03 CDT 2009)
+
+This script is heavily based on the rpm2tgz script written by
+Patrick Volkerding. 
+
+FOR PEOPLE RUNNING SLACKWARE-12.2 (xz is of course part of -current)
+NOTE: This script requires you to have xz installed n your
+      system. The best way is to download the source/a/xz/ 
+      slackbuild and source from a slackware-current mirror 
+      and build xz from scratch.
+      
+      You also may want to edit /etc/DIR_COLORS, so that 
+      txz files show up properly as archives.
