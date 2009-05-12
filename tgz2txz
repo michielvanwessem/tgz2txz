@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Written: 2009, Michiel van Wessem, Manchester, United Kingdom.
 # Based heavily on the rpm2tgz script created by Patrick Volkerding
@@ -28,10 +28,9 @@
 #      system. The best way is to download the source/a/xz/ 
 #      slackbuild and source from a slackware-current mirror 
 #      and build xz from scratch.
-#                        
+#
 #      You also may want to edit /etc/DIR_COLORS, so that 
 #      txz files show up properly as archives.
-                              
 
 if [ "$1" = "" ]; then
   echo "$(basename $0):  Converts a standard slackware package (.tgz) to the new "
@@ -47,19 +46,20 @@ fi
 for i in $*; do
   if [ -e $i ]; then
 
+    # lets make sure we have xz installed.
     if which xz 1> /dev/null 2> /dev/null; then
 
     # Unzip the slackware package so we have just the tarball
     gunzip $i
 
     # Repackage it again, just this time with xz.
-    xz -z $(basename $i .tgz).tar
+    xz -z ${i%/*}/$(basename $i .tgz).tar
 
     # Move the file over to the proper new file extension
-    mv $(basename $i .tgz).tar.xz $(basename $i .tgz).txz
+    mv ${i%/*}/$(basename $i .tgz).tar.xz ${i%/*}/$(basename $i .tgz).txz
 
     else
-      echo "ERROR: xz has not been found. (did you install it?)"
+      echo "ERROR: the \"xz\" utility has not been found. (did you install it?)"
       exit 127
     fi
 
@@ -67,4 +67,3 @@ for i in $*; do
     echo "WARNING: No .tgz files found. Skipping..."
   fi
 done
-
