@@ -36,19 +36,15 @@ trap "do_cleanup ; exit 0" EXIT;
 trap "do_cleanup ; exit 1" SIGINT SIGTERM;
 
 if [ "$1" = "" ]; then
-  echo "$(basename $0):  Converts a standard slackware package (.tgz) to the new "
-  echo "            standard of GNU tar + xz (LZMA) format."
-  echo "            (view converted packages with \"less\", install and remove"
-  echo "            with \"installpkg\", \"removepkg\", \"pkgtool\", or manually"
-  echo "            with \"tar\")"
-  echo
-  echo "Usage:      $(basename $0) <file.tgz> "
-  echo "            (Outputs \"file.txz\")"
+  printf "$(basename $0):  Converts a standard slackware package (.tgz) to \n"
+  printf"          the new standard of GNU tar + xz (LZMA) format. \n\n"
+  printf"Usage:      $(basename $0) <file.tgz> \n"
+  printf"            (Outputs \"file.txz\")\n"
 fi
 
 # First, let's make sure xz is installed.
 if ! xz --help 1> /dev/null 2> /dev/null; then
-  echo "ERROR: the \"xz\" utility has not been found. (did you install it?)"
+  printf "ERROR: the \"xz\" utility has not been found. (did you install it?)\n"
   exit 127
 fi
 
