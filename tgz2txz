@@ -32,6 +32,9 @@
 #      You also may want to edit /etc/DIR_COLORS, so that 
 #      txz files show up properly as archives.
 
+trap "do_cleanup ; exit 0" EXIT;
+trap "do_cleanup ; exit 1" SIGINT SIGTERM;
+
 if [ "$1" = "" ]; then
   echo "$(basename $0):  Converts a standard slackware package (.tgz) to the new "
   echo "            standard of GNU tar + xz (LZMA) format."
@@ -48,6 +51,23 @@ if ! xz --help 1> /dev/null 2> /dev/null; then
   echo "ERROR: the \"xz\" utility has not been found. (did you install it?)"
   exit 127
 fi
+
+find_pkg_basename() {
+  PKG_BASE=$(basename $i .tgz)
+}
+
+do_cleanup() {
+  rm -rf TGZ2TXZ_TEMP
+}
+
+temp_failure() {
+  printf "Failed to create a secure temporary working directory. \n"
+  printf "Be sure you have the \"mktemp\" package installed.\n"
+  exit 1
+}
+
+TMP=${TMP:-/tmp}
+TGZ2TXZ_TEMP=$(mktemp -p ${TMP} -d tgz2txz.XXXXXX 2>/dev/null) || temp_failure
 
 for i in $*; do
   if [ ! -e $i ]; then
