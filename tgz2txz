@@ -37,9 +37,9 @@ trap "do_cleanup ; exit 1" SIGINT SIGTERM;
 
 if [ "$1" = "" ]; then
   printf "$(basename $0):  Converts a standard slackware package (.tgz) to \n"
-  printf"          the new standard of GNU tar + xz (LZMA) format. \n\n"
-  printf"Usage:      $(basename $0) <file.tgz> \n"
-  printf"            (Outputs \"file.txz\")\n"
+  printf "          the new standard of GNU tar + xz (LZMA) format. \n\n"
+  printf "Usage:      $(basename $0) <file.tgz> \n"
+  printf "            (Outputs \"file.txz\")\n"
 fi
 
 # First, let's make sure xz is installed.
@@ -57,7 +57,7 @@ find_pkg_basename() {
 }
 
 do_cleanup() {
-  rm -rf TGZ2TXZ_TEMP
+  rm -rf $TGZ2TXZ_TEMP 
 }
 
 temp_failure() {
@@ -96,5 +96,6 @@ for i in $*; do
     else
       convert_failure
     fi
+  fi
 done
 
