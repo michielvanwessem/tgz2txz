@@ -43,11 +43,14 @@ if [ "$1" = "" ]; then
   echo "            (Outputs \"file.txz\")"
 fi
 
+# First, let's make sure xz is installed.
+if ! which xz 1> /dev/null 2> /dev/null; then
+  echo "ERROR: the \"xz\" utility has not been found. (did you install it?)"
+  exit 127
+fi
+
 for i in $*; do
   if [ -e $i ]; then
-
-    # lets make sure we have xz installed.
-    if which xz 1> /dev/null 2> /dev/null; then
 
     # Unzip the slackware package so we have just the tarball
     gunzip $i
@@ -57,11 +60,6 @@ for i in $*; do
 
     # Move the file over to the proper new file extension
     mv ${i%/*}/$(basename $i .tgz).tar.xz ${i%/*}/$(basename $i .tgz).txz
-
-    else
-      echo "ERROR: the \"xz\" utility has not been found. (did you install it?)"
-      exit 127
-    fi
 
   else
     echo "WARNING: No .tgz files found. Skipping..."
