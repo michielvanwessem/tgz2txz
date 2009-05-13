@@ -44,7 +44,7 @@ if [ "$1" = "" ]; then
 fi
 
 # First, let's make sure xz is installed.
-if ! which xz 1> /dev/null 2> /dev/null; then
+if ! xz --help 1> /dev/null 2> /dev/null; then
   echo "ERROR: the \"xz\" utility has not been found. (did you install it?)"
   exit 127
 fi
