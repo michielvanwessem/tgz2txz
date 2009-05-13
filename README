@@ -2,7 +2,7 @@ tgz2txz is used to convert packages from slackware tgz format,
         over to the new txz format used by slackware-current.
         (as per ChangeLog Entry : Fri May  8 18:49:03 CDT 2009)
 
-This script is heavily based on the rpm2tgz script written by
+This script was orginally based on the rpm2tgz script written by
 Patrick Volkerding. 
 
 FOR PEOPLE RUNNING SLACKWARE-12.2 (xz is of course part of -current)
