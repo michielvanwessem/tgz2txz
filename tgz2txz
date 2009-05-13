@@ -70,20 +70,35 @@ temp_failure() {
   exit 1
 }
 
+convert_failure() {
+  printf "Failed to convert ${PKG_BASE}..."
+}
+
 TMP=${TMP:-/tmp}
 TGZ2TXZ_TEMP=$(mktemp -p ${TMP} -d tgz2txz.XXXXXX 2>/dev/null) || temp_failure
 
 for i in $*; do
   if [ ! -e $i ]; then
-    echo "WARNING: No .tgz files found. Skipping..."
+    printf "WARNING: ${PKG_BASE}.tgz not found - skipping...\n"
   else
-    # Unzip the slackware package so we have just the tarball
-    gunzip $i
+    # Unset PKG_DIR and PKG_BASE just to be sure
+    unset PKG_DIR PKG_BASE
 
-    # Repackage it again, just this time with xz.
-    xz -z ${i%/*}/$(basename $i .tgz).tar
+    # Get the dirname and basename of the package
+    find_pkg_dirname
+    find_pkg_basename
 
-    # Move the file over to the proper new file extension
-    mv ${i%/*}/$(basename $i .tgz).tar.xz ${i%/*}/$(basename $i .tgz).txz
-  fi
+    # Do the conversion into the temporary working directory
+    gunzip -dc ${PKG_DIR}/${PKG_BASE}.tgz | \
+      xz -zc > ${TGZ2TXZ_TEMP}/${PKG_BASE}.txz
+    [ $? = 0 ] && SUCCESS=1
+
+    # If the conversion worked, then wipe the old and move the new over
+    if [ $SUCCESS = 1 ]; then
+      rm -f ${PKG_DIR}/${PKG_BASE}.tgz
+      mv ${TGZ2TXZ_TEMP}/${PKG_BASE}.txz ${PKG_DIR}
+    else
+      convert_failure
+    fi
 done
+
